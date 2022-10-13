@@ -22,12 +22,21 @@ public class Client {
 		 	OutputStream out = s.getOutputStream();
 		 	ObjectOutputStream objOut = new ObjectOutputStream(out);
 		  	
+		 	
+		 	System.out.println("C >>> Envoi d'un integer");
+		  	Integer i = Integer.valueOf(50);
+		  	objOut.writeObject(i);
+		  	System.out.println("C >>> Envoi d'un Point");
+		  	Point p2=new Point(1,2,"Point_client");
+		  	objOut.writeObject(p2);
+		  	
 		 	System.out.println("C >>> Lecture d'un integer");
 		  	Integer I = (Integer) objIn.readObject();
 		  	System.out.println(I);
-		  	System.out.println("C >>> Envoi d'un integer");
-		  	Integer i = Integer.valueOf(50);
-		  	objOut.writeObject(i);
+		  	System.out.println("C >>> Lecture d'un Point");
+		  	Point p=(Point)objIn.readObject();
+		  	System.out.println(p.toString());
+
 		  	
 		 //UnObjet O= new UnObjet() ;
 		 //objOut.writeObject(O);
