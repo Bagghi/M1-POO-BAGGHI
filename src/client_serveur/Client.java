@@ -6,9 +6,34 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
-public class Client {
-
+public class Client extends Thread {
+	
+	private Socket s=null;
+	InputStream in ;
+  	ObjectInputStream objIn;
+ 	OutputStream out;
+ 	ObjectOutputStream objOut ;
+	public Client() {
+		try {
+			s=new Socket("localhost",50263);// Création du socket
+			in = s.getInputStream();
+			objIn = new ObjectInputStream(in);
+			out = s.getOutputStream();
+			objOut = new ObjectOutputStream(out);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	}
+	public void run() {
+		while(true) {
+			
+		}
+		
+	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
