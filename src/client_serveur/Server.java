@@ -8,7 +8,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class Server  extends Thread{
+public class Server  {
 	private static Integer port= 50263;
 	
 	//private ArrayList<Point> liste=new ArrayList<Point>();
