@@ -27,7 +27,7 @@ public class Client {
 	 		Object o=(Object)objIn.readObject();
 	 		System.out.println(o);
 	 		//On vérifie si c'est un message de déconnexion
-	 		if(o instanceof String && o.equals("deconnecToi")) {
+	 		if(o instanceof String && o.equals("deconnecteToi")) {
 	 			System.out.println("il n'y plus d'objets déconnexion");
 	 			s.close();
 	 		}
@@ -35,7 +35,7 @@ public class Client {
 	 			//Saisie des valeurs
 			  	
 	 			
-	 			
+	 			System.out.println("j'arrive la ");
 			  	//On renvoie l'objet
 			  	System.out.println("C>>Envoi d'un objets");
 				objOut.writeObject(o);
