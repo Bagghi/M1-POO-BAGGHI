@@ -11,37 +11,43 @@ public class Client {
 		
 		Socket s=null;
 		try {
+			
 			System.out.println("C >>> Demande de connexion au serveur");
-			s=new Socket("localhost",50263); // Création du socket
-		 // Récupération des flux d’entrée/sortie
+			// Création du socket
+			s=new Socket("localhost",50263); 
+			
+			// Récupération des flux d’entrée/sortie
 			InputStream in = s.getInputStream();
 		  	ObjectInputStream objIn = new ObjectInputStream(in);
 		 	OutputStream out = s.getOutputStream();
 		 	ObjectOutputStream objOut = new ObjectOutputStream(out);
-
-
-		 	System.out.println("C >>> Envoi d'un integer");
-		  	Integer i = Integer.valueOf(50);
-		  	objOut.writeObject(i);
-		  	System.out.println("C >>> Envoi d'un Point");
-		  	Point p2=new Point(1,2,"Point_client");
-		  	objOut.writeObject(p2);
-
-		 	System.out.println("C >>> Lecture d'un integer");
-		  	Integer I = (Integer) objIn.readObject();
-		  	System.out.println(I);
-		  	System.out.println("C >>> Envoi d'un integer");
-		  	Integer i2 = Integer.valueOf(50);
-		  	objOut.writeObject(i2);
-		  	System.out.println("C >>> Lecture d'un Point");
-		  	Point p=(Point)objIn.readObject();
-		  	System.out.println(p.toString());
-
-
-		 //UnObjet O= new UnObjet() ;
-		 //objOut.writeObject(O);
-		  	s.close();
-		} catch (IOException e) {System.err.println(e);} 
+		 	// Récupération des flux d’entrée/sortie
+	 		//Lecture de l'objet
+		  	System.out.println("C >>> Lecture d'un Object");
+	 		Object o=(Object)objIn.readObject();
+	 		System.out.println(o);
+	 		//On vérifie si c'est un message de déconnexion
+	 		if(o instanceof String && o.equals("deconnecToi")) {
+	 			System.out.println("il n'y plus d'objets déconnexion");
+	 			s.close();
+	 		}
+	 		else {
+	 			//Saisie des valeurs
+			  	
+	 			
+	 			
+			  	//On renvoie l'objet
+			  	System.out.println("C>>Envoi d'un objets");
+				objOut.writeObject(o);
+				//Déconnexion
+			  	s.close();
+	 		}
+		  	//System.out.println(o);
+		  	//System.out.println(s.isClosed());
+			  	
+		} catch (IOException e) {
+			//System.err.println(e);
+		} 
 		catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

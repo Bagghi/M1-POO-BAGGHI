@@ -1,9 +1,5 @@
 package client_serveur;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -11,19 +7,27 @@ import java.util.ArrayList;
 public class Server  {
 	private static Integer port= 50263;
 	
-	//private ArrayList<Point> liste=new ArrayList<Point>();
+	private static ArrayList<Object> liste_send=new ArrayList<Object>();
+	private static ArrayList<Object> liste_receive=new ArrayList<Object>();
+	
 	
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
+	public static void main(String[] args) 
+	{
+		//TODO Auto-generated method stub
+		for(int i=0;i<2;i++) {
+			Point p=new Point();
+			liste_send.add(p);
+		}
 		ServerSocket ecoute;
 		
-		try {
+		try 
+		{
 			// On écoute sur le port <PORT>
 			ecoute=new ServerSocket(port);
 			System.out.println("S >>> Lancement du serveur");
-			while (true) {
+			while (true) 
+			{
 				
 				// On accepte une demande de connexion d'un client
 				System.out.println("S >>> En attente de connexion");
@@ -31,18 +35,16 @@ public class Server  {
 				System.out.println("S >>> Client connecté");
 				// Création du thread
 				System.out.println("S >>> Création du thread");
-				MonThread t=new MonThread(client);
+				MonThread t=new MonThread(client,liste_send,liste_receive);
 				System.out.println("S >>> Lancement du thread");
 				t.start();
-	
-				
-				
-				}
 			}
-			catch (IOException e) {
-			 System.err.println(e.getMessage());
-			 System.exit(1);
-			}
+		}
+		catch (IOException e) {
+		 System.err.println(e.getMessage());
+		 System.out.println("ici");
+		 System.exit(1);
+		}
 			
 		
 		

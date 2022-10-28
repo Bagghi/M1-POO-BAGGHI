@@ -43,6 +43,11 @@ public class Point implements Serializable {
 	public Point(double x ,double y) {
 		this(x,y,"");
 	}
+	public Point() {
+		this.x=x;
+		this.y=y;
+		this.nom="";
+	}
 
 	//Methodes
 	public String toString() {
