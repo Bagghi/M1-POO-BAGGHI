@@ -5,6 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.lang.*;
+import java.lang.reflect.Field;
 public class Client {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -25,17 +27,23 @@ public class Client {
 	 		//Lecture de l'objet
 		  	System.out.println("C >>> Lecture d'un Object");
 	 		Object o=(Object)objIn.readObject();
-	 		System.out.println(o);
+	 		//System.out.println(o);
 	 		//On vérifie si c'est un message de déconnexion
 	 		if(o instanceof String && o.equals("deconnecteToi")) {
-	 			System.out.println("il n'y plus d'objets déconnexion");
+	 			System.out.println("C >>> il n'y plus d'objets déconnexion");
 	 			s.close();
 	 		}
 	 		else {
 	 			//Saisie des valeurs
+			  	System.out.println("C >>> Classe de l'objet : "+o.getClass().getSimpleName());
+			  	System.out.println("C >>> Attributs :");
 			  	
+			  	
+			  	for(Field f :o.getClass().getFields()) {
+			  		System.out.println("\t"+f.getType().getSimpleName()+" : "+f.getName());
+			  	}
 	 			
-	 			System.out.println("j'arrive la ");
+	 			
 			  	//On renvoie l'objet
 			  	System.out.println("C>>Envoi d'un objets");
 				objOut.writeObject(o);
