@@ -57,12 +57,12 @@ public class MonThread extends Thread {
 			
 			//On vérifie si le thread est arrêté pour savoir si on attend une réponse du client 
 			if(!this.isInterrupted()) {
-				System.out.println("T >>> j'arrive ici");
 				synchronized(l_receive) {
 					
 					//System.out.println("T>>Réceptions objets");
 					//On lit l'objet et on l'ajoute a la liste des objets reçu
 					Object o=(Object)objIn.readObject();
+					System.out.println("T >>> Ajout de l'objet reçu à la liste "+o);
 					l_receive.add(o);
 					
 				}
