@@ -15,8 +15,10 @@ public class Server  {
 	public static void main(String[] args) 
 	{
 		//TODO Auto-generated method stub
-		for(int i=0;i<10;i++) {
+		for(int i=0;i<5;i++) {
 			Point p=new Point();
+			Segment s=new Segment();
+			liste_send.add(s);
 			liste_send.add(p);
 		}
 		ServerSocket ecoute;
