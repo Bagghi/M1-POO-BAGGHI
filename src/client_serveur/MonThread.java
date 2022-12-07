@@ -33,6 +33,7 @@ public class MonThread extends Thread {
 			ObjectInputStream objIn = new ObjectInputStream(in);
 			
 			//On verrouille la liste d'objets à  envoyés
+			Object o=null;
 			synchronized(l_send){
 				//On vérifie si elle est vide
 				//si elle est vide, on envoie un message de déconnexion au client,
@@ -40,30 +41,36 @@ public class MonThread extends Thread {
 				//Si elle n'est pas vide on récupère un objet dans la liste, 
 				//on enlèves l'objet de la liste et on l'envoie au client
 				if(l_send.isEmpty()){
-					System.out.println("T >>> Envoie du message de déconnexion");
-					String deco=new String("deconnecteToi");
-					objOut.writeObject(deco);
-					client.close();
 					this.interrupt();
 					
 				}
 				else {
 						//System.out.println("T>>Envoi d'un objets et modification liste");
-						Object o=l_send.get(l_send.size()-1);
+						o=l_send.get(l_send.size()-1);
 						l_send.remove(l_send.get(l_send.size()-1));
-						objOut.writeObject(o);
+						
 				}
+			}
+			if(o==null) {
+				System.out.println("T >>> Envoie du message de déconnexion");
+				String deco=new String("deconnecteToi");
+				objOut.writeObject(deco);
+				client.close();
+			}
+			else {
+				objOut.writeObject(o);
 			}
 			
 			//On vérifie si le thread est arrêté pour savoir si on attend une réponse du client 
 			if(!this.isInterrupted()) {
+				//System.out.println("T>>Réceptions objets");
+				//On lit l'objet et on l'ajoute a la liste des objets reçu
+				//o=(Object)objIn.readObject();
 				synchronized(l_receive) {
 					
-					//System.out.println("T>>Réceptions objets");
-					//On lit l'objet et on l'ajoute a la liste des objets reçu
-					Object o=(Object)objIn.readObject();
+					
 					System.out.println("T >>> Ajout de l'objet reçu à la liste "+o);
-					l_receive.add(o);
+					//l_receive.add(o);
 					
 				}
 			}
@@ -74,7 +81,7 @@ public class MonThread extends Thread {
 			System.out.println("T >>> Client déconnecté");
 			
 			
-		}catch (IOException | ClassNotFoundException e) {
+		}catch (IOException e) {
 			 System.err.println(e.getMessage());
 			 System.out.println("iciiiiiii");
 			 System.exit(1);
