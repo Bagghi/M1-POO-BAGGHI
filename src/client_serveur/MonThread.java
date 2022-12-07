@@ -45,7 +45,7 @@ public class MonThread extends Thread {
 					
 				}
 				else {
-						//System.out.println("T>>Envoi d'un objets et modification liste");
+						
 						o=l_send.get(l_send.size()-1);
 						l_send.remove(l_send.get(l_send.size()-1));
 						
@@ -58,19 +58,21 @@ public class MonThread extends Thread {
 				client.close();
 			}
 			else {
+				System.out.println("T>>Envoi d'un objets et modification liste");
 				objOut.writeObject(o);
 			}
 			
 			//On vérifie si le thread est arrêté pour savoir si on attend une réponse du client 
 			if(!this.isInterrupted()) {
-				//System.out.println("T>>Réceptions objets");
+				System.out.println("T>>Réceptions objet");
 				//On lit l'objet et on l'ajoute a la liste des objets reçu
-				//o=(Object)objIn.readObject();
+				o=(Object)objIn.readObject();
+				System.out.println("T>>objet recu");
 				synchronized(l_receive) {
 					
 					
 					System.out.println("T >>> Ajout de l'objet reçu à la liste "+o);
-					//l_receive.add(o);
+					l_receive.add(o);
 					
 				}
 			}
@@ -81,7 +83,7 @@ public class MonThread extends Thread {
 			System.out.println("T >>> Client déconnecté");
 			
 			
-		}catch (IOException e) {
+		}catch (IOException | ClassNotFoundException e) {
 			 System.err.println(e.getMessage());
 			 System.out.println("iciiiiiii");
 			 System.exit(1);

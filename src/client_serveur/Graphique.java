@@ -20,6 +20,7 @@ public class Graphique {
 		contenu=fenetre.getContentPane();
 		contenu.setLayout(new BoxLayout(contenu,BoxLayout.Y_AXIS));
 		btnok=new JButton("OK");
+		
 		fenetre.setVisible(true);
 	}
 	
@@ -61,14 +62,11 @@ public class Graphique {
 				break;
 			case "double":
 			case "Double":
-				//Ici je vais mettre Integer.class, Integer.MIN_VALUE,
-				//Integer.MAX_VALUE pour pouvoir mettre le signe "-" 
-				// car Double.MIN_VALUE et Float.MIN_VAlue sont positifs.
 				 format.setMinimumFractionDigits(1);
 				 format.setMaximumFractionDigits(5);
-				 formatter.setValueClass(Integer.class);
-				 formatter.setMinimum(Integer.MIN_VALUE);
-				 formatter.setMaximum(Integer.MAX_VALUE);
+				 formatter.setValueClass(Double.class);
+				 formatter.setMinimum(Double.MIN_VALUE);
+				 formatter.setMaximum(Double.MAX_VALUE);
 				 formatter.setAllowsInvalid(false);
 				 champ = new JFormattedTextField(formatter);
 				break;
@@ -76,9 +74,9 @@ public class Graphique {
 			case "Float":
 				format.setMinimumFractionDigits(1);
 				format.setMaximumFractionDigits(5);
-				formatter.setValueClass(Integer.class);
-				formatter.setMinimum(Integer.MIN_VALUE);
-				formatter.setMaximum(Integer.MAX_VALUE);
+				formatter.setValueClass(Float.class);
+				formatter.setMinimum(Float.MIN_VALUE);
+				formatter.setMaximum(Float.MAX_VALUE);
 				formatter.setAllowsInvalid(false);
 				champ = new JFormattedTextField(formatter);
 				
@@ -104,7 +102,7 @@ public class Graphique {
 				Vector<Boolean> item= new Vector<Boolean>();
 				item.add(Boolean.TRUE);
 		        item.add(Boolean.FALSE);
-		        champ = new JComboBox(item);
+		        champ = new JComboBox<Boolean>(item);
 				break;
 			case "long":
 			case "Long":

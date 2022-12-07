@@ -1,8 +1,12 @@
 package client_serveur;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import javax.swing.*;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -194,11 +198,11 @@ public static void SaisieGraphique(Object o,Graphique g) {
 		
 		for(Field f :o.getClass().getFields()) {
 			
-	  		System.out.println(f.getType().getSimpleName()+" : "+f.getName()+"\n");
+	  		//System.out.println(f.getType().getSimpleName()+" : "+f.getName()+"\n");
 	  		if(type_primitif.contains(f.getType().getSimpleName())) {
 	  			
 				
-				System.out.println("Entrer le "+f.getName()+"\n"); 
+				//System.out.println("Entrer le "+f.getName()+"\n"); 
 				
 		  		g.add2(f.getType().getSimpleName(), f.getName(),panel);
 		  		
@@ -225,9 +229,114 @@ public static void SaisieGraphique(Object o,Graphique g) {
 		 
 		//sc.close();
 	}
+
+public static void setValeurs(Graphique g,Object o,ArrayList<JPanel> jpanel,int i,ObjectOutputStream objOut,Socket s) {
+	g.btnok.addActionListener(new ActionListener(){
+    @SuppressWarnings("unchecked")
+	public void actionPerformed(ActionEvent e){
+    			
+    	ArrayList<String> type_primitif = new ArrayList<String>(Arrays.asList("String","char","Character","int","Integer","Double","double","Boolean","boolean","float","Float","Short","short","Long","long","Byte","byte"));
+		Object val=null;
+		int j=0;
+		ArrayList<Component> champ=new ArrayList<Component>() ;
+		for(Component c: jpanel.get(i).getComponents()) {
+			if(!c.getClass().getSimpleName().equals("JLabel")) {
+				champ.add(c);
+			}
+		}
+		//System.out.println("PANELS"+jpanel);
+		//System.out.println("CHAMP "+champ);
+		
+		
+		for(Field f :o.getClass().getFields()) {
+	  		if(type_primitif.contains(f.getType().getSimpleName())) {
+		  		switch (f.getType().getSimpleName()) 
+		  		{
+					case "String":
+						val=((JTextArea)champ.get(j)).getText();
+						break;
+					case "char":
+					case "Character":
+						val=((JTextField)champ.get(j)).getText();
+						break;
+						
+					case "int":
+					case "Integer":
+						val=((JFormattedTextField)champ.get(j)).getValue();
+						break;
+					case "double":
+					case "Double":
+						val=((JFormattedTextField)champ.get(j)).getValue();
+						break;
+					case "float":
+					case "Float":
+						val=Float.parseFloat(((JFormattedTextField)champ.get(j)).getText());
+						break;
+					case "short":
+					case "Short":
+						val=((JFormattedTextField)champ.get(j)).getValue();
+						break;
+					case "byte":
+					case "Byte":
+						val=((JFormattedTextField)champ.get(j)).getValue();
+						break;
+					case "boolean":
+					case "Boolean":
+						val=((JComboBox<Boolean>)champ.get(j)).getSelectedItem();
+						break;
+					case "long":
+					case "Long":
+						val=((JFormattedTextField)champ.get(j)).getValue();
+						break;	
+					default:
+						System.out.println("Erreur");
+				}
+		  		try {
+					f.set(o, val);
+					j++;
+				} catch (IllegalArgumentException | IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		  		
+			 }
+	  		else{
+				 try {
+					setValeurs(g,f.get(o),jpanel,i+1,objOut,s);
+				} catch (IllegalArgumentException | IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			 }	
+	  	}
+		sendObject(o,objOut,s);
+		g.fenetre.setVisible(false); 
+		g.fenetre.dispose(); 
+    }
+});
+	
+}
+public static void sendObject(Object o,ObjectOutputStream objOut,Socket s) {
+	//On renvoie l'objet
+  	System.out.println("C>>Envoi d'un objets "+o);
+	try {
+		objOut.writeObject(o);
+	} catch (IOException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+	try {
+		s.close();
+	} catch (IOException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
 	
 	
+}
 	
+	
+
 	
 	
 	
@@ -263,6 +372,11 @@ public static void SaisieGraphique(Object o,Graphique g) {
 			  	System.out.println("C >>> Classe de l'objet : "+o.getClass().getSimpleName());
 			  	System.out.println("C >>> Attributs :");
 //			  	Saisie(o);
+			  //On renvoie l'objet
+			  	//System.out.println("C>>Envoi d'un objets");
+				//objOut.writeObject(o);
+			  //Déconnexion
+			  	//s.close();
 	 			
 	 			//Saisie des valeurs graphique
 	 			Graphique g=new Graphique();
@@ -271,15 +385,15 @@ public static void SaisieGraphique(Object o,Graphique g) {
 			  	SaisieGraphique(o,g);
 			  	g.contenu.add(g.btnok);
 			  	g.fenetre.pack();
-
-			  	
-	 			
-	 			
-			  	//On renvoie l'objet
-			  	System.out.println("C>>Envoi d'un objets");
-				//objOut.writeObject(o);
-				//Déconnexion
-			  	s.close();
+			  	ArrayList<JPanel> jpanel=new ArrayList<JPanel>();
+		    	for(Component c :g.contenu.getComponents()) {
+		    		if(c.getClass().getSimpleName().equals("JPanel")) {
+		    			jpanel.add((JPanel)c);
+		    		}
+		    	}
+		    	setValeurs(g,o,jpanel,0,objOut,s);
+		    	
+				
 	 		}
 		  	//System.out.println(o);
 		  	//System.out.println(s.isClosed());
