@@ -4,10 +4,12 @@ import javax.swing.text.NumberFormatter;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.text.NumberFormat;
-import java.util.InputMismatchException;
 import java.util.Vector;
-public class Graphique {
+public class Graphique extends WindowAdapter {
 	
 	JFrame fenetre ;
 	Container contenu ; 
@@ -15,13 +17,41 @@ public class Graphique {
 	public void init() {
 		fenetre =new JFrame();
 		fenetre.setTitle("Client_server");
-		fenetre.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		fenetre.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		fenetre.setLocationRelativeTo(null);
 		contenu=fenetre.getContentPane();
 		contenu.setLayout(new BoxLayout(contenu,BoxLayout.Y_AXIS));
 		btnok=new JButton("OK");
 		
 		fenetre.setVisible(true);
+		
+		
+	}
+	public void unSeulChar(JTextField champ) {
+		champ.addKeyListener(new KeyAdapter() {
+			  public void keyTyped(KeyEvent e) {
+			       if( ( (JTextField)champ ).getText().length()>0    ) {
+			        e.consume(); 
+			    }
+			   }
+			});
+	}
+	public void actionOnclose(Object o,Socket s,ObjectOutputStream objOut) {
+		fenetre.addWindowListener(new WindowAdapter(){
+            public void windowClosing(WindowEvent e){
+            	try {
+            		System.out.println("Renvoie de l'objet");
+        			objOut.writeObject(o);
+        			System.out.println("Déconnexion");
+        			s.close();
+        		} catch (IOException e1) {
+        			// TODO Auto-generated catch block
+        			e1.printStackTrace();
+        		}
+            	fenetre.setVisible(false);
+            	fenetre.dispose();
+            }
+		});
 	}
 	
 	public void add2(String type,String nomChamp,JPanel panel) {
@@ -43,6 +73,7 @@ public class Graphique {
 			case "Character":
 				champ=(JTextField)new JTextField(new String(""));
 				
+				unSeulChar((JTextField)champ);
 				((JTextField)champ).setColumns(10);
 				
 				break;
@@ -69,6 +100,7 @@ public class Graphique {
 				 formatter.setMaximum(Double.MAX_VALUE);
 				 formatter.setAllowsInvalid(false);
 				 champ = new JFormattedTextField(formatter);
+				
 				break;
 			case "float":
 			case "Float":
